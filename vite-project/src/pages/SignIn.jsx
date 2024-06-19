@@ -1,92 +1,122 @@
-import { useState } from "react"
+
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-export default function SignIn() {
-  const [newUser, setNewUser] = useState({});
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
-  const handleChange = (e) =>{
-    setNewUser({...newUser, 
-      [e.target.id]: e.target.value.trim() })
-  }
+export default function SignIn ()  {
+    const [formData, setFormData] = useState({});
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
+  };
 
-  const handleSubmit = async (e) =>{
-    e.preventDefault();
-    if (!newUser.username || !newUser.email || !newUser.password){
-          return setErrorMessage('Please fill out all fields.')
-    }
-    try {
-      setLoading(true);
-      setErrorMessage(null);
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newUser),
-      });
-      const data = await res.json();
-      if (data.success === false){
-        return setErrorMessage(data.message)
-      }
-      setLoading(false);
-      if (res.ok){
-        navigate('/sign-in')
-      }
-      
-    } catch (error) {
-      setErrorMessage(error.message);
-      setLoading(false);
-    }
+const handleSubmit = async (e) => {
+   e.preventDefault();
+   if (!formData.email || !formData.password) {
+    return setErrorMessage('Please fill out all fields.');
   }
+   try {
+     setLoading(true);
+     setErrorMessage(null);
+     const res = await fetch('/api/auth/signin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+     });
+     const data = await res.json();
+     if (data.success === false){
+      return setErrorMessage(data.message);
+     }
+     setLoading(false);
+     if(res.ok){
+      navigate('/');
+     }
+   } catch (error) {
+     setErrorMessage(error.message);
+     setLoading(false);
+   }
+
+}
+
   return (
-    <div>
-      <div className="">
-
-        <form 
-             className="flex flex-col gap-4  bg-slate-400 py-20 pl-8 items-center"
-             onSubmit={handleSubmit}>
-              <h1 className="bold-lg">Create an account</h1>
-              <div className="">
-                <label>Username: </label>
-                <input type='text'
-                    placeholder="username"
-                    onChange={handleChange}
-                    className="rounded-lg border-2 p-2 w-full"
-                    id='name'
-                    value={newUser.username}
-                  />
-              </div>
+    <div 
+  
+    className='min-h-screen'>
+     
+       <div
+        
+       className="flex p-3 max-w-3xl mx-auto flex-col md:flex-row md:items-center gap-5 bg-opacity-50">
+          {/* left */}
           
-              <div className="">
-              <label>Password: </label>
-              <input type='password'
-                  placeholder="password"
-                  onChange={handleChange}
-                  className="rounded-lg border-2 p-2 w-full"
-                  id='password'
-                  value={newUser.password}
-                 />
-              </div>
-                 <button 
-                      type='submit'
-                      className="text-white bg-gradient-to-r from-blue-500 to-green-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 w-40 justify-center"
-                      disabled={loading}
-                      >
-                        {
-                          loading ? 'Loading...' : 'Sign In'
-                        }
-                        </button>
-        </form>
-        <div className="flex gap-2 text-sm mt-5">
+          <div className="flex-1">
+            <Link to='/' 
+                  className='font- bold dark:text-white text-4xl'>
+                <span className='px-2 py-1 bg-red-500
+                 rounded-lg text-white'>
+                  IMDB
+                </span>
+                
+          </Link>
+          
+          </div>
+          {/* right */}
+          <div className="flex-1">
+            <form 
+                className='flex flex-col gap-4'
+                onSubmit={handleSubmit}>
+              
+               <div className="flex flex-col items-center">
+                 <label className=' text-black text-bold underline'>Email</label>
+                 <input 
+                     className='ml-2 p-2 shadow-md rounded-lg'
+                     type='email' 
+                     placeholder='name@company.com' 
+                     id='email' 
+                     onChange={handleChange}/>
+               </div>
+               <div className="flex flex-col items-center">
+                 <label className=' text-black text-bold underline'>Password </label>
+                 <input 
+                      className='ml-2 p-2 shadow-md rounded-lg'
+                      type='password' 
+                      placeholder='Password' 
+                      id='password' 
+                      onChange={handleChange}/>
+               </div>
+               <button 
+                    type="submit" 
+                    className="text-black bg-white hover:bg-gray-500 focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 border-2"
+                    disabled={loading}>
+                    {
+                       loading ? 'Loading...' : 'Sign In'
+                    }
+                </button>
+               
+            </form>
+
+            <div className="flex gap-2 text-sm mt-5">
                <span>Dont have an account?</span>
                <Link to='/sign-up' className='text-blue-500'>
                   Sign Up
                </Link>
             </div>
-      </div>
+            {
+              errorMessage && (
+                <div class="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+                <span class="sr-only">Info</span>
+                <div>
+                  <span class="font-medium">{errorMessage}</span>
+                </div>
+              </div>
+              )
+            }
+          </div>
+       </div>
     </div>
-  )
-}
+  );
+};
