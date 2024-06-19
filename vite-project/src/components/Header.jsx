@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import logo from '../assets/poke.jpg';
+import logo from '../assets/movie.jpg';
 import { HamburgerMenu } from './HamburgerMenu';
 
 export const Header = () => {
   return (
-    <header className='flex items-center justify-between'>
+    <header className='flex items-center justify-between sticky top-0 bg-white'>
        <div className="">
             <img src={logo}
                 className=' h-20 w-23' />
@@ -12,7 +12,7 @@ export const Header = () => {
        <div>
           <input 
              type='text'
-             placeholder='Search for Pokemons...'
+             placeholder='Search...'
              className='items-center justify-center'/>
         </div>
         
