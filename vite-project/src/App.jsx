@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route} from 'react-router-dom';
 import Home from "./pages/Home";
-import PokeCard from './components/PokeCard';
 import { Header } from './components/Header';
+import SignIn from './pages/SignIn.jsx';
+import SignUp from './pages/SignUp.jsx';
+import { PiSignIn } from 'react-icons/pi';
 
 
 export default function App() {
@@ -10,7 +12,8 @@ export default function App() {
       <Header />
       <Routes>
          <Route path='/' element={<Home/>}/>
-         <Route path='/pokecard/:id' element={<PokeCard/>}/>
+         <Route path='/sign-in' element={<SignIn/>}/>
+         <Route path='/sign-up' element={<SignUp/>}/>
       </Routes>
     </BrowserRouter>
       
